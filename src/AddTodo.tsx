@@ -25,7 +25,7 @@ export const AddTodo: React.FC<TodoProps> = ({onSubmit}) => {
     }
       
    }
-
+ 
     return (
         <View style={styles.block}>
             <TextInput 
@@ -33,6 +33,9 @@ export const AddTodo: React.FC<TodoProps> = ({onSubmit}) => {
             onChangeText={(text:string) => setValue(text)}
             value={value}
             placeholder="Введите что-то !!!"
+            autoCorrect={false}
+            autoCapitalize='none'
+            keyboardType='number-pad'
             />
             <Button  
             title="Добавить"
