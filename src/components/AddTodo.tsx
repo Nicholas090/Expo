@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {View, StyleSheet, TextInput, Button, ViewStyle, Alert} from 'react-native'; 
-
+import {View, StyleSheet, TextInput, ViewStyle, Alert, Keyboard} from 'react-native'; 
+import {AntDesign} from '@expo/vector-icons';
 interface styleTodo {
     block: ViewStyle,
     input: {};
@@ -20,6 +20,7 @@ export const AddTodo: React.FC<TodoProps> = ({onSubmit}) => {
        if (value.trim()) {
            onSubmit(value);
         setValue('');
+        Keyboard.dismiss();
        } else {
         Alert.alert('Вы не ввели ничего что-то')
     }
@@ -35,12 +36,13 @@ export const AddTodo: React.FC<TodoProps> = ({onSubmit}) => {
             placeholder="Введите что-то !!!"
             autoCorrect={false}
             autoCapitalize='none'
-            keyboardType='number-pad'
             />
-            <Button  
-            title="Добавить"
-            onPress={pressBtn}
-            />
+
+            <AntDesign.Button 
+             onPress={pressBtn}
+             name="pluscircleo">
+                 Добавить
+            </AntDesign.Button>
         </View>
     )
 } 
@@ -50,7 +52,7 @@ const styles = StyleSheet.create<styleTodo>({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 1
+        marginBottom: 10
     },
     input: {
         width: "70%",
@@ -58,5 +60,6 @@ const styles = StyleSheet.create<styleTodo>({
         borderBottomWidth: 2,
         borderBottomColor: "#3949ab",
         padding: 10
+        
     }
 });

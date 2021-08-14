@@ -1,65 +1,43 @@
-import React, {FunctionComponent, JSXElementConstructor, useState} from 'react';
-import { StyleSheet, Text, View , ScrollView, FlatList} from 'react-native';
-import { Navbar } from './src/Navbar';
-import { AddTodo } from './src/AddTodo';
-import {Todo} from './src/Todo';
+import React, { useState} from 'react';
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import { MainLayout } from './src/MainLayout';
+import {TodoState} from './src/context/todo/todoState'
+import {ScreenState} from './src/context/screen/screenState'
 
-interface infTodo {
-  key: string,
-  title: string
+
+
+async function loadAplication() {
+  await Font.loadAsync({
+    'robot-regular': require('./assets/fonts/Roboto-Regular.ttf'),
+    'robot-bold': require('./assets/fonts/Roboto-Bold.ttf')
+  });
 }
-
  
 export default function App() {
 
+  const [isReady, setIsReady] = useState<boolean>(false);
 
-  const [todos, setTodos] = useState<Array<infTodo>>([]);
 
-  const addTodo = (title: string) => {
-//     const newTodo = {
-//       id: Date.now().toString(),
-//       title: title
-// }
+  if (!isReady) {
+    return (
+      <AppLoading 
+      startAsync={loadAplication}
+      onError={(err) => console.log(err)}
+      onFinish={() => setIsReady(true)}
+      />
+    )
+  }
 
-    // setTodos(todos.concat([newTodo]))
-    // setTodos( (prevTodos) => {
-    //     return [
-    //       ...prevTodos,
-    //       newTodo
-    //     ]
-    // });
-
-    setTodos(prev => [
-      ...prev, 
-      {
-      key: Date.now().toString(),
-      title
-    }
-  ])
-  };
-    
-
+             
+        
 
   return (
-    <View>
-       <Navbar title="todoApp"/>
-      <View style={styles.container}>
-      <AddTodo onSubmit={addTodo} />
-
-        <FlatList
-        keyExtractor={item => item.key.toString()}
-        data={todos}
-        renderItem={({item}) => <Todo todo={item} key={item.key}/>}
-        />
-
-    </View>
-    </View>
+    <ScreenState>
+     <TodoState>
+      <MainLayout/>  
+     </TodoState>
+    </ScreenState> 
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-      paddingHorizontal: 30,
-      paddingVertical: 20
-  }
-});
