@@ -3,7 +3,7 @@ import {Text, StyleSheet} from 'react-native';
 
 interface AppTextProp {
     // children: any,
-    styled: any
+    styled?: any
 }
 export const AppText: React.FC<AppTextProp> = ({children, styled}: PropsWithChildren<AppTextProp>) => 
     (
@@ -13,6 +13,6 @@ export const AppText: React.FC<AppTextProp> = ({children, styled}: PropsWithChil
 
     const styles = StyleSheet.create({
         default:  {
-            fontFamily: 'roboto-regular'
+            fontFamily: 'font1'
         }
     });

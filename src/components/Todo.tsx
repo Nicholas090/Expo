@@ -35,6 +35,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        fontFamily: 'robot-bold'
+        // fontFamily: 'robot-bold'
     }
 })

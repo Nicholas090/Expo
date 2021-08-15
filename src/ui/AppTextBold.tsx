@@ -13,6 +13,6 @@ export const AppTextBold: React.FC<AppTextBoldProp> = ({children, styled}: Props
 
     const styles = StyleSheet.create({
         default:  {
-            fontFamily: 'robot-bold'
+            fontFamily: 'roboto-bold'
         }
     });

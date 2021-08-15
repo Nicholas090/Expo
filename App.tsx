@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { Component, useState} from 'react';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { MainLayout } from './src/MainLayout';
@@ -7,14 +7,22 @@ import {ScreenState} from './src/context/screen/screenState'
 
 
 
-async function loadAplication() {
-  await Font.loadAsync({
-    'robot-regular': require('./assets/fonts/Roboto-Regular.ttf'),
-    'robot-bold': require('./assets/fonts/Roboto-Bold.ttf')
-  });
+  
+export default function App()  {
+
+async function loadApplication() {
+  try {
+    await Font.loadAsync({
+      'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
+      'roboto-bold': require('./assets/fonts/Roboto-Bold.ttf')
+    })
+    setIsReady(true)
+  } catch (error) {
+    console.log(error)
+  }
 }
- 
-export default function App() {
+  
+    
 
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -22,7 +30,7 @@ export default function App() {
   if (!isReady) {
     return (
       <AppLoading 
-      startAsync={loadAplication}
+      startAsync={loadApplication}
       onError={(err) => console.log(err)}
       onFinish={() => setIsReady(true)}
       />

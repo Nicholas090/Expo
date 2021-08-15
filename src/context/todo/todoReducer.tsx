@@ -1,15 +1,16 @@
-import {ADD_TODO, UPDATE_TODO, REMOVE_TODO} from './types';
+import {ADD_TODO, UPDATE_TODO, REMOVE_TODO, SHOW_LOADER, HIDE_LOADER,CLEAR_ERROR, SHOW_ERROR, FETCH_TODOS} from './types';
 import {infTodo} from '../../MainLayout';
 
+    interface ErrorProp {
+        error: string
+    }
+
 const handlers = {
-    [ADD_TODO]: (state : any, {title}: any) => ({...state,
+    [ADD_TODO]: (state : any, {title, key}: infTodo) => ({...state,
         todos: [
-            ...state.todos, 
-            {
-        key: Date.now().toString(),
-        title
-   }
-]}),
+            ...state.todos, { key , title }
+    ]}),
+    
     [REMOVE_TODO]: (state : any, {key}: any) => ({...state, 
     todos: state.todos.filter((todo: infTodo) => todo.key !== key)}),
 
@@ -20,6 +21,11 @@ const handlers = {
             }
             return todo
         })}),
+        [SHOW_LOADER]: (state: any) => ({...state, loading: true}),
+        [HIDE_LOADER]: (state: any) => ({...state, loading: false}),
+        [CLEAR_ERROR]: (state: any) => ({...state, error: null}),
+        [SHOW_ERROR]: (state: any, {error}: ErrorProp) => ({...state, error}),
+        [FETCH_TODOS]: (state: any, {todos}: any) => ({...state, todos}),
         DEFAULT: (state: any) => state
 
 

@@ -8,7 +8,10 @@ type ContextProp = {
     todos: Array<infTodo>,
     addTodo: (title: string) => void,
     removeTodo: (key: string) => void,
-    updateTodo: (title: string, key: string) => void
+    updateTodo: (title: string, key: string) => void,
+    loading: boolean,
+    error: string,
+    fetchTodos: () => void
 }
 
 

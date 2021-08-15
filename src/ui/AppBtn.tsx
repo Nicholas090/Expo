@@ -17,7 +17,7 @@ export const AppBtn: React.FC<AppBtnProp> = ({children, onPress, color = THEME.M
    return (
     <Wrapper onPress={onPress} activeOpacity={0.7}>
         <View style={{...styles.button, backgroundColor: color}}>
-    <AppTextBold styled={styles.text}>{children}</AppTextBold>
+    <AppTextBold styled={styles.text} >{children}</AppTextBold>
         </View>
     </Wrapper>
     )

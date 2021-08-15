@@ -28,8 +28,8 @@ export const TodoScreen: React.FC= () => {
 
     const todo = todos.find(i => i.key === todoKey);
 
-    const saveHandler = (title: string) => {
-        updateTodo(todo!.key, title)
+    const saveHandler = async (title: string) => {
+      await  updateTodo(todo!.key, title)
         setModal(false)
     }
     

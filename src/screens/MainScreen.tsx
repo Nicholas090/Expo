@@ -1,21 +1,29 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { View, StyleSheet, Image, FlatList, useWindowDimensions, Dimensions} from 'react-native';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
+import { View, StyleSheet, Image,Text, FlatList, useWindowDimensions, Dimensions} from 'react-native';
 import {AddTodo} from '../components/AddTodo';
 import {Todo} from '../components/Todo';
 import { THEME } from '../theme';
 import {TodoContext} from '../context/todo/todoContext';
 import { ScreenContext } from '../context/screen/screenContext';
-
+import { AppLoader } from '../ui/AppLoader';
+import {AppText} from '../ui/AppText';
+import { AppBtn } from '../ui/AppBtn';
 
 
 
 export const MainScreen: React.FC = () => {
    
-    const {addTodo, todos, removeTodo} = useContext(TodoContext);
+    const {addTodo, todos, removeTodo, fetchTodos, loading, error} = useContext(TodoContext);
     const {changeScreen} = useContext(ScreenContext);
 
 
     const [deviceWidth, setDeviceWidth] = useState<number>(useWindowDimensions().width - THEME.PADDING_HORIZONTAL * 2);
+
+    const loadTodos = useCallback(async () => await fetchTodos(), [fetchTodos])
+
+    useEffect(() => {
+        loadTodos();
+    }, []);
 
     useEffect(() => {
         const update = () => {
@@ -29,6 +37,19 @@ export const MainScreen: React.FC = () => {
          Dimensions.removeEventListener('change', update);
          }
     });
+
+    if (loading) {     
+        return <AppLoader/>
+    }
+
+    if (error) {
+        return (
+            <View style={styles.center}>
+                <AppText styled={styles.error}>{error}</AppText>
+                <AppBtn onPress={loadTodos}>Повторить</AppBtn>
+            </View>
+            )
+   }
 
    let content: JSX.Element = (
     <View style={{width: deviceWidth}}>
@@ -44,7 +65,10 @@ export const MainScreen: React.FC = () => {
     )}
     />
     </View>
-   )
+   
+   
+   
+    )
 
    if (todos.length === 0) {
        content = (
@@ -76,5 +100,15 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'contain'
+    },
+    error: {
+        fontSize: 25,
+        color: THEME.DANGER_COLOR,
+        paddingBottom: 30
+    },
+    center: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 170 ,
     }
 });
