@@ -13,7 +13,7 @@ import { AppBtn } from '../ui/AppBtn';
 
 export const MainScreen: React.FC = () => {
    
-    const {addTodo, todos, removeTodo, fetchTodos, loading, error} = useContext(TodoContext);
+    const {addTodo, todos, removeTodo, fetchTodos, loading, error, clearError} = useContext(TodoContext);
     const {changeScreen} = useContext(ScreenContext);
 
 
@@ -71,6 +71,9 @@ export const MainScreen: React.FC = () => {
     )
 
    if (todos.length === 0) {
+       if (error) {
+           clearError()
+       }
        content = (
        <View style={styles.imgWrap}>
            <Image 

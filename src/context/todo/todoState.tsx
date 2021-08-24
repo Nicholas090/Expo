@@ -5,7 +5,7 @@ import { ScreenContext } from '../screen/screenContext';
 import {TodoContext} from './todoContext';
 import {todoReducer} from './todoReducer';
 import {ADD_TODO, UPDATE_TODO, REMOVE_TODO, SHOW_LOADER, HIDE_LOADER, SHOW_ERROR, CHANGE_SCREEN, CLEAR_ERROR, FETCH_TODOS} from './types';
-
+import {Http} from '../../http';
 
     interface TodoStateProp{
         children: any
@@ -24,38 +24,27 @@ export const TodoState = ({ children }: PropsWithChildren<TodoStateProp>) => {
    const [state, dispatch] = useReducer(todoReducer, initialState)
 
     const addTodo = async (title: string) => {
-     const response = 
-      await fetch(
-        'https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
-      {
-        method: 'POST',
-        headers: {'Content-Type': 'aplication/json'},
-        body: JSON.stringify({ title })
-      })
-      const data = await response.json()
-      console.log('Data', data.name)
-       dispatch({type: ADD_TODO, title, key: data.name})
-      }
+      clearError()
+        try {
+          const data = await Http.post('https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
+         { title }
+        )
+         dispatch({type: ADD_TODO, title, key: data.name})
+        } catch (error) {
+          showError('Что-то погло не так')
+        }
+       }
     
 
       const fetchTodos = async () => {
         showLoader();
         clearError();
-        try {
-                
-         const response = await fetch(
-          'https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
-            {
-              method: 'GET',
-              headers: {'Content-Type': 'application/json'}
-            }
-          )
-          const data = await response.json();
-          // console.log('Data',data)
+        try {              
+        const data = await Http.get('https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos.json')
           const todos = Object.keys(data).map(key => ({ ...data[key], key: key }));
-         setTimeout( dispatch({type: FETCH_TODOS, todos}), 50000);
+         dispatch({type: FETCH_TODOS, todos});
         } catch (e) {
-          showError('Что-то пошло не так!!!');
+          // showError('Что-то пошло не так!!');
           console.log(e);
         } finally {
           hideLoader();
@@ -79,8 +68,11 @@ export const TodoState = ({ children }: PropsWithChildren<TodoStateProp>) => {
           },
           { 
             text: "Удалить", 
-            onPress: () => {              
-        changeScreen(null)
+            onPress: async () => {              
+        changeScreen(null!)
+        await Http.delete(
+          `https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos/${key}.json`
+        )
         dispatch({type: REMOVE_TODO, key})
             }
           }
@@ -109,13 +101,17 @@ export const TodoState = ({ children }: PropsWithChildren<TodoStateProp>) => {
     const updateTodo = async (key: string, title: string) => {
       clearError();
       try {
-        const response = await  fetch(
-          `https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos${key}.json`,
-          {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({title})
-          }  
+        //  await  fetch(
+        //   `https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos/${key}.json`,
+        //   {
+        //     method: 'PATCH',
+        //     headers: {'Content-Type': 'application/json'},
+        //     body: JSON.stringify({title})
+        //   }  
+        // )
+        // dispatch({type: UPDATE_TODO, key, title})
+        await  Http.patch(
+          `https://react-native-expo-d0205-default-rtdb.europe-west1.firebasedatabase.app/todos/${key}.json`
         )
         dispatch({type: UPDATE_TODO, key, title})
 
@@ -123,7 +119,8 @@ export const TodoState = ({ children }: PropsWithChildren<TodoStateProp>) => {
         console.log(error);
         showError('Что-то пошло не так...');
       }
-      ;}
+      
+    }
   
 
     return (
@@ -134,7 +131,8 @@ export const TodoState = ({ children }: PropsWithChildren<TodoStateProp>) => {
             addTodo,
             removeTodo,
             updateTodo,
-            fetchTodos
+            fetchTodos,
+            clearError
                     }}>
             {children}
         </TodoContext.Provider>

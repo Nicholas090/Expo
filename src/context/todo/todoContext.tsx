@@ -11,7 +11,8 @@ type ContextProp = {
     updateTodo: (title: string, key: string) => void,
     loading: boolean,
     error: string,
-    fetchTodos: () => void
+    fetchTodos: () => void,
+    clearError: () => void
 }
 
 

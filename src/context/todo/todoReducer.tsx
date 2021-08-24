@@ -14,7 +14,7 @@ const handlers = {
     [REMOVE_TODO]: (state : any, {key}: any) => ({...state, 
     todos: state.todos.filter((todo: infTodo) => todo.key !== key)}),
 
-    [UPDATE_TODO]: (state : any, {title, key}: any) => ({...state,
+    [UPDATE_TODO]: (state : any, {title, key}: infTodo) => ({...state,
         todos: state.todos.map((todo: infTodo) => {
             if (todo.key === key) {
                 todo.title = title
